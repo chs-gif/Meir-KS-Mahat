@@ -1,0 +1,36 @@
+import fs from 'fs'
+
+// כותב לקובץ בצורה סינכרונית, אם הקובץ לא קיים יוצר אותו, אם קיים, מחליף את התוכן בטקסט החדש
+fs.writeFileSync('file1.txt', 'hello')
+// כותב לקובץ בצורה סינכרונית, אם הקובץ לא קיים יוצר אותו, אם קיים, מוסיף את הטקסט החדש בסוף התוכן
+fs.appendFileSync('file1.txt', ' from sync')
+
+// קורא את הקובץ בצורה סינכרונית
+const data = fs.readFileSync('file1.txt', 'utf8')
+
+console.log('data: ', data)
+
+console.log('after sync actions')
+
+fs.writeFile('file2.txt', 'hello from async', (err) => {
+    if (err)
+        console.log('error: ', err)
+    else
+        fs.readFile('file2.txt', 'utf8', (err, data) => {
+            if (err)
+                console.log('error: ', err)
+            else
+                console.log('data: ', data)
+        })
+})
+
+fs.rename('file1.txt', 'file.pdf', (err) => {
+    if (err)
+        console.log('error: ', err)
+    else
+        console.log('rename success')
+})
+
+fs.unlinkSync('file2.txt')
+
+console.log('after async actions')

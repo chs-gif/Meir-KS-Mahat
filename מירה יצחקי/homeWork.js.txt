@@ -1,0 +1,57 @@
+import fs from 'fs'
+
+fs.writeFile('file1.txt', 'hello', (err) => {
+    if (err) {
+        console.log('Error writing "hello": ', err)
+        return
+    }
+
+    fs.appendFile('file1.txt', ' from async', (err) => {
+        if (err) {
+            console.log('Error appending " from async": ', err)
+            return
+        }
+
+        fs.readFile('file1.txt', 'utf8', (err, data) => {
+            if (err) {
+                console.log('Error reading file1.txt: ', err)
+                return
+            }
+
+            console.log('data: ', data)
+
+  
+            fs.unlink('file2.txt', (err) => {
+                if (err) {
+                    console.log('Error unlinking file2.txt: ', err)
+                } else {
+                    console.log('unlink file2.txt success')
+                }
+            })
+        })
+    })
+})
+
+
+fs.writeFile('file2.txt', 'hello from async', (err) => {
+    if (err)
+        console.log('error: ', err)
+    else
+        fs.readFile('file2.txt', 'utf8', (err, data) => {
+            if (err)
+                console.log('error: ', err)
+            else
+                console.log('data: ', data)
+        })
+})
+
+fs.rename('file1.txt', 'file.pdf', (err) => {
+    if (err)
+        console.log('error: ', err)
+    else
+        console.log('rename success')
+})
+
+
+console.log('after async actions')
+console.log('after all fs calls were initiated')
